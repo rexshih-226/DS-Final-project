@@ -22,7 +22,7 @@ public class SearchController {
 
     @GetMapping("/") // 一樣是給spring讀的註解，看網址最後是甚麼
     public String home() {
-        return "index";
+        return "forward:/index.html";
     } // 不要加副檔名
 
     @GetMapping("/search")

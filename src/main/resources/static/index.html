@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" >
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Boogle 🐻</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="dark">
+    <div class="card">
+        <h1>Boogle🐻</h1>
+
+        <form>
+            <input type="text" name="q" placeholder="輸入關鍵字" autocomplete="off" id="searchString"></input>
+            <button type="submit" id="searchBtn">搜尋</button>
+        </form>
+
+        <!-- 初次進入提示 -->
+        <p class="empty">輸入關鍵字開始搜尋。</p>
+
+        <!-- 有結果 -->
+        <ul>
+            <li id="result">
+            </li>
+        </ul>
+
+        <!-- 查過但為空 -->
+        <p class="empty">沒有找到結果。</p>
+
+        <!-- 伺服端可選的錯誤訊息通道 -->
+        <p class="empty"></p>
+    </div>
+
+    <script src="app.js"></script>
+
+</body>
+
+
+</html>
