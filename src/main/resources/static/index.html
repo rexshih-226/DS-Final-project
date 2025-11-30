@@ -8,6 +8,7 @@
 </head>
 
 <body class="dark">
+    <button id="themeToggle" class="theme-btn">🌞 / 🌙</button>
     <div class="card">
         <h1>Boogle🐻</h1>
 
@@ -17,19 +18,17 @@
         </form>
 
         <!-- 初次進入提示 -->
-        <p class="empty">輸入關鍵字開始搜尋。</p>
+        <p class="empty" id="emptyMsg">輸入關鍵字開始搜尋。</p>
 
         <!-- 有結果 -->
-        <ul>
-            <li id="result">
-            </li>
+        <ul id="result">
         </ul>
 
         <!-- 查過但為空 -->
-        <p class="empty">沒有找到結果。</p>
+        <!-- <p class="empty">沒有找到結果。</p> -->
 
         <!-- 伺服端可選的錯誤訊息通道 -->
-        <p class="empty"></p>
+        <!-- <p class="empty"></p> -->
     </div>
 
     <script src="app.js"></script>

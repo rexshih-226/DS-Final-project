@@ -23,6 +23,26 @@ form {
             flex-wrap: wrap;
 }
 
+/* 主題切換按鈕 */
+.theme-btn {
+    position: fixed;
+    top: 16px;
+    right: 16px;
+    z-index: 999;
+    padding: 10px 14px;
+    border: none;
+    border-radius: 10px;
+    background: #ddd;
+    cursor: pointer;
+    font-size: 18px;
+    box-shadow: 0 2px 6px #0003;
+}
+
+body.dark .theme-btn {
+    background: #333;
+    color: #eee;
+}
+
 /*===========================
 =   亮色主題  (Light Mode)
 ===========================*/
