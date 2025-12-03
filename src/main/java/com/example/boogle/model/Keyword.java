@@ -1,4 +1,4 @@
-package com.example.boogle.keywordsearching;
+package com.example.boogle.model;
 
 public class Keyword{
 	public String name;

@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.example.boogle.model.Keyword;
+
 public class WebTree {
 	public WebNode root;
 	private static final double CHILD_WEIGHT = 0.6; //子頁面分數權重

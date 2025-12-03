@@ -3,6 +3,8 @@ package com.example.boogle.keywordsearching;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import com.example.boogle.model.Keyword;
+
 public class WebPage {
 	public String url;
 	public String name;

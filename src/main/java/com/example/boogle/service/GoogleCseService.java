@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Comparator;
+
+import com.example.boogle.model.SearchItem;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -26,8 +29,8 @@ public class GoogleCseService {
 
     private final RestTemplate restTemplate = new RestTemplate();
 
-    public List<Map<String, String>> search(String query, int num) {
-        List<Map<String, String>> results = new ArrayList<>();
+    public List<SearchItem> search(String query, int num) {
+        List<SearchItem> results = new ArrayList<>();
         if (!enabled)
             return results;
 
@@ -42,6 +45,8 @@ public class GoogleCseService {
             if (body == null)
                 return results;
 
+            KeywordSearchingService keywordService = new KeywordSearchingService(query);
+
             Object itemsObj = body.get("items");
             if (itemsObj instanceof List) {
                 List<?> items = (List<?>) itemsObj;
@@ -55,11 +60,9 @@ public class GoogleCseService {
                         String link = linkObj == null ? "" : linkObj.toString();
                         String snippet = snippetObj == null ? "" : snippetObj.toString();
                         if (!title.isEmpty() && !link.isEmpty() && !snippet.isEmpty()) {
-                            Map<String, String> m = new HashMap<>();
-                            m.put("title", title);
-                            m.put("link", link);
-                            m.put("snippet", snippet);
-                            results.add(m);
+                            SearchItem sitem = new SearchItem(title, link,snippet);
+                            sitem.setScore(keywordService.calculateScore(link));
+                            results.add(sitem);
                         }
                     }
                 }
@@ -67,6 +70,8 @@ public class GoogleCseService {
         } catch (Exception e) {
             System.err.println("CSE error: " + e.getMessage());
         }
+
+        results.sort(Comparator.comparing(SearchItem::getScore).reversed());
         return results;
     }
 }
