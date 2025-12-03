@@ -45,6 +45,7 @@ public class SearchController {
         String finalQuery = geminiQueryOrchestrator.buildFinalSearchQuery(q);
 
         // 2. 再用 Gemini 產生出來的「最後關鍵字」去 Google CSE 搜尋
-        return cseService.search(finalQuery, num);
+        return cseService.search(finalQuery + " java", num);
+
     }
 }

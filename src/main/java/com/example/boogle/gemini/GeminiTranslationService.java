@@ -32,7 +32,6 @@ public class GeminiTranslationService {
                 Rules:
                 1) Reply in English only.
                 2) Do not add explanations or quotes.
-                3) Keep the translation concise (no more than 15 words).
 
                 User query:
                 """ + userQuery;

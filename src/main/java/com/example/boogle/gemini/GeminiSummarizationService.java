@@ -37,6 +37,8 @@ public class GeminiSummarizationService {
                 2) Do not output any explanation, punctuation, or extra words.
                 3) Keep it under 5 words.
                 4) Use English only.
+                5) This is for web search engines, which is focus on java programming language.
+                6) Make sure the keyword is as concise as possible.
 
                 Search query:
                 """ + englishQuery;
