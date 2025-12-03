@@ -32,10 +32,10 @@ public class GoogleCseService {
             return results;
 
         try {
-            String q = URLEncoder.encode(query, StandardCharsets.UTF_8.name());
+            String q = URLEncoder.encode(query, StandardCharsets.UTF_16.name());
             String url = "https://www.googleapis.com/customsearch/v1?key=" + apiKey
                     + "&cx=" + cx + "&num=" + num + "&q=" + q;
-
+            
             @SuppressWarnings("unchecked")
             ResponseEntity<Map> resp = restTemplate.getForEntity(url, Map.class);
             Map<String, Object> body = resp.getBody();
@@ -50,12 +50,15 @@ public class GoogleCseService {
                         Map<?, ?> item = (Map<?, ?>) itemObj;
                         Object titleObj = item.get("title");
                         Object linkObj = item.get("link");
+                        Object snippetObj = item.get("snippet");
                         String title = titleObj == null ? "" : titleObj.toString();
                         String link = linkObj == null ? "" : linkObj.toString();
-                        if (!title.isEmpty() && !link.isEmpty()) {
+                        String snippet = snippetObj == null ? "" : snippetObj.toString();
+                        if (!title.isEmpty() && !link.isEmpty() && !snippet.isEmpty()) {
                             Map<String, String> m = new HashMap<>();
                             m.put("title", title);
                             m.put("link", link);
+                            m.put("snippet", snippet);
                             results.add(m);
                         }
                     }
