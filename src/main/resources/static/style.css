@@ -23,6 +23,10 @@ form {
             flex-wrap: wrap;
 }
 
+ul{
+    list-style: none;
+}
+
 /* 主題切換按鈕 */
 .theme-btn {
     position: fixed;
