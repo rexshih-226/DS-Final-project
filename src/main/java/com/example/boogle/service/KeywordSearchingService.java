@@ -26,11 +26,12 @@ public class KeywordSearchingService {
     public double calculateScore(String url) {
         double score = 0.0;
         try {
-            int searchingKeywordCount = WordCounter(url, searchingKeyword.name);
+            String content = FetchContent(url);
+            int searchingKeywordCount = WordCounter(content, searchingKeyword.name);
             score += searchingKeywordCount * searchingKeyword.weight;
 
             for (Keyword kw : fixedKeywords) {
-                int count = WordCounter(url, kw.name);
+                int count = WordCounter(content, kw.name);
                 score += count * kw.weight;
             }
         } catch (Exception e) {
@@ -39,9 +40,8 @@ public class KeywordSearchingService {
         return score;
     }
 
-    public int WordCounter(String url, String keyword) {
+    public int WordCounter(String content, String keyword) {
         try {
-            String content = FetchContent(url);
             if (content == null || content.isEmpty())
                 return 0;
 
@@ -57,7 +57,7 @@ public class KeywordSearchingService {
                 fromIdx = found + keyword.length();
             }
             return retVal;
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return 0;
         }
