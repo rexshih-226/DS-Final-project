@@ -71,8 +71,8 @@ public class KeywordSearchingService {
             URL url = new URL(urlStr);
             conn = (HttpURLConnection) url.openConnection();
             conn.setInstanceFollowRedirects(false); // ✅ 不處理 redirect
-            conn.setConnectTimeout(5000);
-            conn.setReadTimeout(5000);
+            conn.setConnectTimeout(1000);
+            conn.setReadTimeout(1000);
             conn.setRequestProperty("User-Agent", "Mozilla/5.0");
 
             int status = conn.getResponseCode();
