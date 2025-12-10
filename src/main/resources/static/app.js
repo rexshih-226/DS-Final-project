@@ -33,7 +33,7 @@ function search(e){
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
-            return response.json();        // 🔥 一定要加這段
+            return response.json();        
         })
         .then(data => {
 
