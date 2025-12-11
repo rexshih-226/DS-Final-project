@@ -3,17 +3,16 @@ package com.example.boogle.service;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.Comparator;
-
-import com.example.boogle.model.SearchItem;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+
+import com.example.boogle.model.SearchItem;
 
 @Service
 public class GoogleCseService {
@@ -35,43 +34,60 @@ public class GoogleCseService {
             return results;
 
         try {
-            String q = URLEncoder.encode(query, StandardCharsets.UTF_16.name());
-            String url = "https://www.googleapis.com/customsearch/v1?key=" + apiKey
-                    + "&cx=" + cx + "&num=" + num + "&q=" + q;
-            
-            @SuppressWarnings("unchecked")
-            ResponseEntity<Map> resp = restTemplate.getForEntity(url, Map.class);
-            Map<String, Object> body = resp.getBody();
-            if (body == null)
-                return results;
+            String encodedQ = URLEncoder.encode(query, StandardCharsets.UTF_16.name());
+
+            int remaining = num; // 例如 num=20
+            int start = 1; // Google 的第一頁從 1 開始
+            int pageSize = 10; // Google API 的硬限制
 
             KeywordSearchingService keywordService = new KeywordSearchingService(query);
 
-            Object itemsObj = body.get("items");
-            if (itemsObj instanceof List) {
-                List<?> items = (List<?>) itemsObj;
-                for (Object itemObj : items) {
-                    if (itemObj instanceof Map) {
-                        Map<?, ?> item = (Map<?, ?>) itemObj;
-                        Object titleObj = item.get("title");
-                        Object linkObj = item.get("link");
-                        Object snippetObj = item.get("snippet");
-                        String title = titleObj == null ? "" : titleObj.toString();
-                        String link = linkObj == null ? "" : linkObj.toString();
-                        String snippet = snippetObj == null ? "" : snippetObj.toString();
-                        if (!title.isEmpty() && !link.isEmpty() && !snippet.isEmpty()) {
-                            SearchItem sitem = new SearchItem(title, link,snippet);
-                            sitem.setScore(keywordService.calculateScore(link));
-                            results.add(sitem);
+            while (remaining > 0) {
+                int fetchCount = Math.min(pageSize, remaining);
+
+                String url = "https://www.googleapis.com/customsearch/v1"
+                        + "?key=" + apiKey
+                        + "&cx=" + cx
+                        + "&num=" + fetchCount
+                        + "&start=" + start
+                        + "&q=" + encodedQ;
+
+                ResponseEntity<Map> resp = restTemplate.getForEntity(url, Map.class);
+                Map<String, Object> body = resp.getBody();
+                if (body == null)
+                    break;
+
+                Object itemsObj = body.get("items");
+                if (itemsObj instanceof List) {
+                    for (Object itemObj : (List<?>) itemsObj) {
+                        if (itemObj instanceof Map) {
+                            @SuppressWarnings("unchecked")
+                            Map<String, Object> item = (Map<String, Object>) itemObj;
+
+                            String title = item.get("title") != null ? item.get("title").toString() : "";
+                            String link = item.get("link") != null ? item.get("link").toString() : "";
+                            String snippet = item.get("snippet") != null ? item.get("snippet").toString() : "";
+
+                            if (!title.isEmpty() && !link.isEmpty() && !snippet.isEmpty()) {
+                                SearchItem sitem = new SearchItem(title, link, snippet);
+                                sitem.setScore(keywordService.calculateScore(link));
+                                results.add(sitem);
+                            }
                         }
                     }
                 }
+
+                remaining -= fetchCount;
+                start += fetchCount; // 下一頁（例如從 1 → 11）
             }
+
         } catch (Exception e) {
             System.err.println("CSE error: " + e.getMessage());
         }
 
+        // 依照分數排序
         results.sort(Comparator.comparing(SearchItem::getScore).reversed());
         return results;
     }
+
 }
