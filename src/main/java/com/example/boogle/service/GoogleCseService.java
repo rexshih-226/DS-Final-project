@@ -85,9 +85,20 @@ public class GoogleCseService {
             System.err.println("CSE error: " + e.getMessage());
         }
 
-        // 依照分數排序
+        // 依照分數排序（由高到低）
         results.sort(Comparator.comparing(SearchItem::getScore).reversed());
+
+        // 設定 rank 並印在 console
+        int rank = 1;
+        for (SearchItem item : results) {
+            item.setRank(rank);
+            System.out.printf("[Result] rank=%d, score=%.4f, title=%s, link=%s%n",
+                    rank, item.getScore(), item.getTitle(), item.getLink());
+            rank++;
+        }
+
         return results;
+
     }
 
 }

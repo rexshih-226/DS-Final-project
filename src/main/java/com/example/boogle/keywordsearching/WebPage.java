@@ -11,24 +11,34 @@ public class WebPage {
 	public WordCounter counter;
 	public double score;
 
-	
-	public WebPage(String url,String name){
+	public WebPage(String url, String name) {
 		this.url = url;
 		this.name = name;
-		this.counter = new WordCounter(url);	
+		this.counter = new WordCounter(url);
 	}
-	
-	public void setScore(ArrayList<Keyword> keywords) throws IOException{
-		// YOUR TURN
-		// 1. calculate the score of this webPage
+
+	public void setScore(ArrayList<Keyword> keywords) throws IOException {
 		this.score = 0.0;
-		for(int i=0;i<keywords.size();i++) {
-			try{
-				int number = counter.countKeyword(keywords.get(i).name);
-				this.score += number * keywords.get(i).weight;
-			}catch(IOException e){}
+
+		for (Keyword k : keywords) {
+			try {
+				int number = counter.countKeyword(k.name);
+
+				// 只在有出現時印出，避免太吵
+				if (number > 0) {
+					System.out.printf("[KeywordCount] page=%s, keyword=%s, count=%d%n",
+							this.url, k.name, number);
+				}
+
+				this.score += number * k.weight;
+			} catch (IOException e) {
+				System.err.println("Count keyword failed. url=" + url
+						+ ", keyword=" + k.name + ", msg=" + e.getMessage());
+			}
 		}
 
+		// 印出此頁面的總分（只算自己，不含子頁面）
+		System.out.printf("[PageScore] page=%s, selfScore=%.4f%n", this.url, this.score);
 	}
-	
+
 }

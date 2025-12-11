@@ -7,6 +7,7 @@ public class SearchItem implements Comparator<SearchItem> {
     private String link;
     private String snippet;
     private double score;
+    private int rank;
 
     public SearchItem() {
     }
@@ -41,21 +42,31 @@ public class SearchItem implements Comparator<SearchItem> {
         this.snippet = snippet;
     }
 
+    public int getRank() {
+        return rank;
+    }
+
+    public void setRank(int rank) {
+        this.rank = rank;
+    }
+
     @Override
     public int compare(SearchItem o1, SearchItem o2) {
-        if(o1.getScore() == o2.getScore()) return 0;
+        if (o1.getScore() == o2.getScore())
+            return 0;
 
-        if(o1.getScore() > o2.getScore()) return 1;
+        if (o1.getScore() > o2.getScore())
+            return 1;
 
-        if(o1.getScore() < o2.getScore()) return -1;
+        if (o1.getScore() < o2.getScore())
+            return -1;
 
         return 0;
     }
 
     // @Override
     // public int compareTo(SearchItem other) {
-    //     return Double.compare(other.getScore(), this.getScore());
+    // return Double.compare(other.getScore(), this.getScore());
     // }
 
-    
 }

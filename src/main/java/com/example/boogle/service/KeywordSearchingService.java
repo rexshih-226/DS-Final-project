@@ -2,9 +2,8 @@ package com.example.boogle.service;
 
 import java.util.ArrayList;
 
-import com.example.boogle.keywordsearching.WebTree;
 import com.example.boogle.keywordsearching.WebPage;
-
+import com.example.boogle.keywordsearching.WebTree;
 import com.example.boogle.model.Keyword;
 
 public class KeywordSearchingService {
@@ -22,13 +21,22 @@ public class KeywordSearchingService {
 
     public double calculateScore(String url) {
         double score = 0.0;
-        try{
+        try {
+            System.out.println("================================================");
+            System.out.println("[Analyze Site] " + url);
+
             WebPage root = new WebPage(url, "root");
             WebTree webTree = new WebTree(root);
             webTree.buildAutomatically();
             webTree.setPostOrderScore(Keywords);
+
+            System.out.println("[WebTree] structure & node scores:");
+            webTree.eularPrintTree(); // ★ 印出樹狀結構 + nodeScore
+            System.out.println("Root nodeScore = " + webTree.root.nodeScore);
+            System.out.println("================================================");
+
             return webTree.root.nodeScore;
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return score;
