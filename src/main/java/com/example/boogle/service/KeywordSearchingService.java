@@ -1,11 +1,11 @@
 package com.example.boogle.service;
 
-import java.util.ArrayList;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 
 import com.example.boogle.model.Keyword;
 
@@ -71,8 +71,8 @@ public class KeywordSearchingService {
             URL url = new URL(urlStr);
             conn = (HttpURLConnection) url.openConnection();
             conn.setInstanceFollowRedirects(false); // ✅ 不處理 redirect
-            conn.setConnectTimeout(1000);
-            conn.setReadTimeout(1000);
+            conn.setConnectTimeout(10000);
+            conn.setReadTimeout(10000);
             conn.setRequestProperty("User-Agent", "Mozilla/5.0");
 
             int status = conn.getResponseCode();
