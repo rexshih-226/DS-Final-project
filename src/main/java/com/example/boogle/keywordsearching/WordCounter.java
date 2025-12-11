@@ -2,9 +2,11 @@ package com.example.boogle.keywordsearching;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -18,41 +20,21 @@ public class WordCounter {
         this.urlStr = urlStr;
     }
 
-    public String fetchContent() throws IOException {
-        HttpURLConnection conn = null;
-        BufferedReader br = null;
-        StringBuilder retVal = new StringBuilder();
-        try {
-            URL url = new URL(this.urlStr);
-            conn = (HttpURLConnection) url.openConnection();
-            conn.setInstanceFollowRedirects(false); // ✅ 不處理 redirect
-            conn.setConnectTimeout(5000);
-            conn.setReadTimeout(5000);
-            conn.setRequestProperty("User-Agent", "Mozilla/5.0");
-
-            int status = conn.getResponseCode();
-
-            // 若非 200 OK 或為 redirect，直接略過
-            if (status != HttpURLConnection.HTTP_OK || (status >= 300 && status < 400)) {
-                System.out.println("略過無法載入或被重導向的網站：" + urlStr);
-                return "";
-            }
-
-            br = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
-            String line;
-            while ((line = br.readLine()) != null) {
-                retVal.append(line).append("\n");
-            }
-        } catch (Exception e) {
-            System.out.println("載入失敗：" + urlStr + "，略過。");
-            return ""; // 忽略任何錯誤
-        } finally {
-            if (br != null)
-                br.close();
-            if (conn != null)
-                conn.disconnect();
-        }
-        return retVal.toString();
+    private String fetchContent() throws IOException{
+		URL url = new URL(this.urlStr);
+		URLConnection conn = url.openConnection();
+		InputStream in = conn.getInputStream();
+		BufferedReader br = new BufferedReader(new InputStreamReader(in));
+	
+		String retVal = "";
+	
+		String line = null;
+		
+		while ((line = br.readLine()) != null){
+		    retVal = retVal + line + "\n";
+		}
+	
+		return retVal;
     }
 
     public int countKeyword(String keyword) throws IOException {
@@ -81,8 +63,9 @@ public class WordCounter {
         Matcher matcher = pattern.matcher(html);
         while (matcher.find()) {
             String link = matcher.group(1);
-            if (link.startsWith("http"))
+            if(link.startsWith("http://") || link.startsWith("https://"))
                 links.add(link);
+            if(links.size() >= 5) break; // 最多五個連結
         }
         return links;
     }

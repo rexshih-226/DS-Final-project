@@ -74,14 +74,9 @@ public class WebTree {
 
 	//新增：啟動自動建樹（從 root 開始）
 	public void buildAutomatically() throws IOException {
-		root.children.get(0).webPage.counter.getContent(); //預先抓取 Publications 內容
-		root.children.get(0).children.get(0).webPage.counter.getContent(); //預先抓取 Springer 內容
-		root.children.get(1).webPage.counter.getContent(); //預先抓取 Projects 內容
-		root.children.get(2).webPage.counter.getContent(); //預先抓取 Members 內容
-		root.children.get(3).webPage.counter.getContent(); //預先抓取 Course 內容
-		for(WebNode child : root.children){
-			autoBuild(child, 1);
-		}
+		// for(WebNode child : root.children){
+		// 	autoBuild(child, 1);
+		// }
 
 		autoBuild(root, 0);
 
