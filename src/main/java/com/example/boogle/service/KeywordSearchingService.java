@@ -11,12 +11,13 @@ public class KeywordSearchingService {
 
     public KeywordSearchingService(String keyword) {
         this.Keywords = new ArrayList<Keyword>();
-        Keywords.add(new Keyword("JAVA", 5.0));
         Keywords.add(new Keyword("CLASS", 4.0));
         Keywords.add(new Keyword("METHOD", 4.0));
         Keywords.add(new Keyword("INERFACE", 3.0));
-        Keywords.add(new Keyword("JAVASCRIPT", -3.0));
-        Keywords.add(new Keyword(keyword.toUpperCase(), 10.0));
+        String[] words = keyword.split("\\s+"); // 以空白分隔
+        for (String w : words) {
+            Keywords.add(new Keyword(w.toUpperCase(), 10.0));
+        }
     }
 
     public double calculateScore(String url) {

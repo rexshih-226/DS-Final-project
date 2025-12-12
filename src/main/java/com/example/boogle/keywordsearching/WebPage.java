@@ -24,11 +24,8 @@ public class WebPage {
 			try {
 				int number = counter.countKeyword(k.name);
 
-				// 只在有出現時印出，避免太吵
-				if (number > 0) {
-					System.out.printf("[KeywordCount] page=%s, keyword=%s, count=%d%n",
-							this.url, k.name, number);
-				}
+				System.out.printf("[KeywordCount] page=%s, keyword=%s, count=%d%n",
+						this.url, k.name, number);
 
 				this.score += number * k.weight;
 			} catch (IOException e) {
