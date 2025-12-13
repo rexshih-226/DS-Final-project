@@ -1,6 +1,10 @@
 package com.example.boogle.service;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.List;
 
 import com.example.boogle.keywordsearching.WebPage;
 import com.example.boogle.keywordsearching.WebTree;
@@ -11,13 +15,34 @@ public class KeywordSearchingService {
 
     public KeywordSearchingService(String keyword) {
         this.Keywords = new ArrayList<Keyword>();
-        Keywords.add(new Keyword("CLASS", 4.0));
-        Keywords.add(new Keyword("METHOD", 4.0));
-        Keywords.add(new Keyword("INERFACE", 3.0));
+        loadKeywordsFromFile("keywords.txt");
         String[] words = keyword.split("\\s+"); // 以空白分隔
         for (String w : words) {
             Keywords.add(new Keyword(w.toUpperCase(), 10.0));
         }
+    }
+
+    private void loadKeywordsFromFile(String filePath) {
+        try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream(filePath);
+                BufferedReader br = new BufferedReader(new InputStreamReader(inputStream))) {
+
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (parts.length == 2) {
+                    String name = parts[0].trim().toUpperCase();
+                    double weight = Double.parseDouble(parts[1].trim());
+                    Keywords.add(new Keyword(name, weight));
+                    System.out.printf("[LoadKeyword] name=%s, weight=%.2f%n", name, weight);
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("Fail to get the keyword file：" + e.getMessage());
+        }
+    }
+
+    public List<Keyword> getKeywords() {
+        return Keywords;
     }
 
     public double calculateScore(String url) {
