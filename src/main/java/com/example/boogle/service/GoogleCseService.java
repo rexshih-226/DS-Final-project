@@ -2,6 +2,7 @@ package com.example.boogle.service;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.security.Key;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -40,7 +41,7 @@ public class GoogleCseService {
             int start = 1; // Google 的第一頁從 1 開始
             int pageSize = 10; // Google API 的硬限制
 
-            KeywordSearchingService keywordService = new KeywordSearchingService(query);
+                                Sorttoten sorttoten = new Sorttoten(query);
 
             while (remaining > 0) {
                 int fetchCount = Math.min(pageSize, remaining);
@@ -70,7 +71,8 @@ public class GoogleCseService {
 
                             if (!title.isEmpty() && !link.isEmpty() && !snippet.isEmpty()) {
                                 SearchItem sitem = new SearchItem(title, link, snippet);
-                                sitem.setScore(keywordService.calculateScore(link));
+                                // sitem.setScore(keywordService.calculateScore(link));
+                                sitem.setScore(sorttoten.calculateScore(title,snippet));
                                 results.add(sitem);
                             }
                         }
@@ -88,10 +90,16 @@ public class GoogleCseService {
         // 依照分數排序（由高到低）
         results.sort(Comparator.comparing(SearchItem::getScore).reversed());
 
+        KeywordSearchingService keywordService = new KeywordSearchingService(query);
+        for (int i = 0; i <= 10; i++) {
+            results.get(i).setScore(keywordService.calculateScore(results.get(i).getLink()));
+        }
+
+        results.sort(Comparator.comparing(SearchItem::getScore).reversed());
+
         // 設定 rank 並印在 console
         int rank = 1;
         for (SearchItem item : results) {
-            item.setRank(rank);
             System.out.printf("[Result] rank=%d, score=%.4f, title=%s, link=%s%n",
                     rank, item.getScore(), item.getTitle(), item.getLink());
             rank++;
