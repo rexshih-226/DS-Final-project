@@ -28,6 +28,12 @@ public class GoogleCseService {
     private String cx;
 
     private final RestTemplate restTemplate = new RestTemplate();
+    private final TranslationService translationService;//new
+
+    //new
+    public GoogleCseService(TranslationService translationService) {
+        this.translationService = translationService;
+    }
 
     public List<SearchItem> search(String query, int num) {
         List<SearchItem> results = new ArrayList<>();
@@ -35,13 +41,15 @@ public class GoogleCseService {
             return results;
 
         try {
-            String encodedQ = URLEncoder.encode(query, StandardCharsets.UTF_16.name());
+            //new 翻譯成英文
+            String translatedQuery = translationService.translateToEnglish(query);
+            String encodedQ = URLEncoder.encode(translatedQuery, StandardCharsets.UTF_8);//change
 
             int remaining = num; // 例如 num=20
             int start = 1; // Google 的第一頁從 1 開始
             int pageSize = 10; // Google API 的硬限制
 
-                                Sorttoten sorttoten = new Sorttoten(query);
+            Sorttoten sorttoten = new Sorttoten(query);
 
             while (remaining > 0) {
                 int fetchCount = Math.min(pageSize, remaining);
