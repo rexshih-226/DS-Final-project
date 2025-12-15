@@ -28,7 +28,7 @@ public class SearchController {
     @GetMapping("/api/search")
     @ResponseBody
     public List<SearchItem> api(@RequestParam("q") String q,
-            @RequestParam(value = "num", defaultValue = "5") int num) {
+            @RequestParam(value = "num", defaultValue = "20") int num) {
         return cseService.search(q + " java", num);
     }
 }

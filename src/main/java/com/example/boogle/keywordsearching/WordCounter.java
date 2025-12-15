@@ -4,8 +4,13 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.http.HttpClient;
+import java.net.http.HttpResponse;
+import java.net.http.HttpRequest;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -24,18 +29,30 @@ public class WordCounter {
         this.urlStr = urlStr;
     }
 
-    private String fetchContent() throws IOException {
-        URL url = new URL(this.urlStr);
-        URLConnection conn = url.openConnection();
-        InputStream in = conn.getInputStream();
-        BufferedReader br = new BufferedReader(new InputStreamReader(in));
+    private String fetchContent() throws IOException{
+        try{
+        HttpClient client = HttpClient.newBuilder()
+        .connectTimeout(Duration.ofSeconds(3))
+        .build();
 
-        StringBuilder retVal = new StringBuilder();
-        String line;
-        while ((line = br.readLine()) != null) {
-            retVal.append(line).append("\n"); // （避免用 String += 造成 O(N^2) 的效能問題）
-        }
-        return retVal.toString();
+HttpRequest request = HttpRequest.newBuilder()
+        .uri(URI.create(urlStr))
+        .timeout(Duration.ofSeconds(3)) // 整個 request 最多 3 秒
+        .GET()
+        .build();
+
+HttpResponse<String> response =
+        client.send(request, HttpResponse.BodyHandlers.ofString());
+
+if (response.statusCode() != 200) {
+    throw new RuntimeException("HTTP error: " + response.statusCode());
+}
+
+return response.body();
+} catch (InterruptedException e) {
+    System.out.println("Request interrupted: " + e.getMessage());
+    }
+    return null;
     }
 
     // 取得純文字內容（去除 HTML 標籤、script、style）。
