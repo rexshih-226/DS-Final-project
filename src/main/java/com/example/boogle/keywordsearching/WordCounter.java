@@ -1,15 +1,10 @@
 package com.example.boogle.keywordsearching;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.URI;
-import java.net.URL;
-import java.net.URLConnection;
 import java.net.http.HttpClient;
-import java.net.http.HttpResponse;
 import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +17,7 @@ public class WordCounter {
 
     private String content;
     private String plainText;
+    private int totalTokens = -1;
 
     private java.util.Map<String, Integer> freq;
 
@@ -29,30 +25,29 @@ public class WordCounter {
         this.urlStr = urlStr;
     }
 
-    private String fetchContent() throws IOException{
-        try{
-        HttpClient client = HttpClient.newBuilder()
-        .connectTimeout(Duration.ofSeconds(3))
-        .build();
+    private String fetchContent() throws IOException {
+        try {
+            HttpClient client = HttpClient.newBuilder()
+                    .connectTimeout(Duration.ofSeconds(3))
+                    .build();
 
-HttpRequest request = HttpRequest.newBuilder()
-        .uri(URI.create(urlStr))
-        .timeout(Duration.ofSeconds(3)) // 整個 request 最多 3 秒
-        .GET()
-        .build();
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(urlStr))
+                    .timeout(Duration.ofSeconds(3)) // 整個 request 最多 3 秒
+                    .GET()
+                    .build();
 
-HttpResponse<String> response =
-        client.send(request, HttpResponse.BodyHandlers.ofString());
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-if (response.statusCode() != 200) {
-    throw new RuntimeException("HTTP error: " + response.statusCode());
-}
+            if (response.statusCode() != 200) {
+                throw new RuntimeException("HTTP error: " + response.statusCode());
+            }
 
-return response.body();
-} catch (InterruptedException e) {
-    System.out.println("Request interrupted: " + e.getMessage());
-    }
-    return null;
+            return response.body();
+        } catch (InterruptedException e) {
+            System.out.println("Request interrupted: " + e.getMessage());
+        }
+        return null;
     }
 
     // 取得純文字內容（去除 HTML 標籤、script、style）。
@@ -102,6 +97,8 @@ return response.body();
         while (m.find()) {
             String token = m.group();
             freq.merge(token, 1, Integer::sum);
+            totalTokens++;
+
         }
     }
 
@@ -148,4 +145,10 @@ return response.body();
             content = fetchContent();
         return content;
     }
+
+    public int getTotalTokenCount() throws IOException {
+        ensureFreq();
+        return (totalTokens < 0) ? 0 : totalTokens;
+    }
+
 }
