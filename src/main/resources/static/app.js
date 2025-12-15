@@ -24,7 +24,8 @@ function search(e){
     el.result.innerHTML = ''; //清空之前的結果
     let html = '';
 
-    el.Msg.innerText = "載入中";
+    el.Msg.innerText = "載入中...";
+    // el.Msg.style.visibility = 'visible'; // 顯示
     el.Msg.style.display = "block";
 
     const query = el.searchString.value;
@@ -47,6 +48,7 @@ function search(e){
                 `;
             });
             el.result.innerHTML = html;
+                    // el.Msg.style.visibility = 'hidden'; // 隱藏
             el.Msg.style.display = "none";
         })
         .catch(error => {
@@ -54,7 +56,7 @@ function search(e){
             el.Msg.innerText = "搜尋失敗，請稍後再試";
         });
 
-    document.getElementById("emptyMsg").style.display = "none";
+    // document.getElementById("emptyMsg").style.display = "none";
 }
 
 function toggleTheme() {
