@@ -130,7 +130,7 @@ public class WordCounter {
             if (link.startsWith("http://") || link.startsWith("https://"))
                 links.add(link);
 
-            if (links.size() >= 5)
+            if (links.size() >= 2)
                 break;
         }
         return links;

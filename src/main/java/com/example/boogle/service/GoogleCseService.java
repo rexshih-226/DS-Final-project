@@ -2,7 +2,6 @@ package com.example.boogle.service;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.security.Key;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -28,9 +27,9 @@ public class GoogleCseService {
     private String cx;
 
     private final RestTemplate restTemplate = new RestTemplate();
-    private final TranslationService translationService;//new
+    private final TranslationService translationService;// new
 
-    //new
+    // new
     public GoogleCseService(TranslationService translationService) {
         this.translationService = translationService;
     }
@@ -41,9 +40,9 @@ public class GoogleCseService {
             return results;
 
         try {
-            //new 翻譯成英文
+            // new 翻譯成英文
             String translatedQuery = translationService.translateToEnglish(query);
-            String encodedQ = URLEncoder.encode(translatedQuery, StandardCharsets.UTF_8);//change
+            String encodedQ = URLEncoder.encode(translatedQuery, StandardCharsets.UTF_8);// change
 
             int remaining = num; // 例如 num=20
             int start = 1; // Google 的第一頁從 1 開始
@@ -80,7 +79,7 @@ public class GoogleCseService {
                             if (!title.isEmpty() && !link.isEmpty() && !snippet.isEmpty()) {
                                 SearchItem sitem = new SearchItem(title, link, snippet);
                                 // sitem.setScore(keywordService.calculateScore(link));
-                                sitem.setScore(sorttoten.calculateScore(title,snippet));
+                                sitem.setScore(sorttoten.calculateScore(title, snippet));
                                 results.add(sitem);
                             }
                         }
@@ -99,7 +98,7 @@ public class GoogleCseService {
         results.sort(Comparator.comparing(SearchItem::getScore).reversed());
 
         KeywordSearchingService keywordService = new KeywordSearchingService(query);
-        for (int i = 0; i <= 10; i++) {
+        for (int i = 0; i < 10; i++) {
             results.get(i).setScore(keywordService.calculateScore(results.get(i).getLink()));
         }
 

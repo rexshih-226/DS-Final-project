@@ -15,11 +15,11 @@ import com.example.boogle.service.TranslationService;//new
 public class SearchController {
 
     private final GoogleCseService cseService;
-    private final TranslationService translationService;//new
+    private final TranslationService translationService;// new
 
-    public SearchController(GoogleCseService cseService, TranslationService translationService) {//change
+    public SearchController(GoogleCseService cseService, TranslationService translationService) {// change
         this.cseService = cseService;
-        this.translationService = translationService;//new
+        this.translationService = translationService;// new
     }
 
     @GetMapping("/") // 給spring讀的註解，發出HTTP GET時會被觸發
@@ -32,12 +32,8 @@ public class SearchController {
     @ResponseBody
     public List<SearchItem> api(@RequestParam("q") String q,
             @RequestParam(value = "num", defaultValue = "20") int num) {
-        
-        //new 翻譯成英文
-        String translatedQuery = translationService.translateToEnglish(q);
-        System.out.println(translatedQuery);
 
-        //new 傳給GoogleCseService
-        return cseService.search(translatedQuery + " java coding", num);//change
+        // new 傳給GoogleCseService
+        return cseService.search(q + " java coding", num);// change
     }
 }
