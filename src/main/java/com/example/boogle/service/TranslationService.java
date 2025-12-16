@@ -3,6 +3,7 @@ package com.example.boogle.service;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.HtmlUtils;
@@ -10,7 +11,8 @@ import org.springframework.web.util.HtmlUtils;
 @Service
 public class TranslationService {
 
-    private final String apiKey = "API";// API key
+    @Value("${google.translation.apiKey}")
+    private String apiKey;
 
     public String translateToEnglish(String text) {
         if (text == null || text.isEmpty())

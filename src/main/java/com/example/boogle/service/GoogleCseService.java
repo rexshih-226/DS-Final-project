@@ -20,10 +20,10 @@ public class GoogleCseService {
     @Value("${google.cse.enabled:false}")
     private boolean enabled;
 
-    @Value("${google.cse.apiKey:}")
+    @Value("${google.cse.apiKey}")
     private String apiKey;
 
-    @Value("${google.cse.cx:}")
+    @Value("${google.cse.cx}")
     private String cx;
 
     private final RestTemplate restTemplate = new RestTemplate();
