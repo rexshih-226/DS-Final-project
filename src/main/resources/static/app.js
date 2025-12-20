@@ -3,7 +3,7 @@ const el = {
     searchBtn: document.getElementById('searchBtn'),
 
     //提示文字
-    Msg: document.getElementById('emptyMsg'),
+    Msg: document.getElementById('hintMsg'),
 
     //搜尋的內容
     searchString: document.getElementById('searchString'),
@@ -25,7 +25,6 @@ function search(e){
     let html = '';
 
     el.Msg.innerText = "載入中...";
-    // el.Msg.style.visibility = 'visible'; // 顯示
     el.Msg.style.display = "block";
 
     const query = el.searchString.value;
@@ -48,7 +47,6 @@ function search(e){
                 `;
             });
             el.result.innerHTML = html;
-                    // el.Msg.style.visibility = 'hidden'; // 隱藏
             el.Msg.style.display = "none";
         })
         .catch(error => {
@@ -56,7 +54,6 @@ function search(e){
             el.Msg.innerText = "搜尋失敗，請稍後再試";
         });
 
-    // document.getElementById("emptyMsg").style.display = "none";
 }
 
 function toggleTheme() {

@@ -117,7 +117,7 @@ body.light .snippet {
     color: #444;
 }
 
-body.light .empty {
+body.light .hintMsg {
     color: #777;
     text-align: center;
     margin-top: 18px;
@@ -193,7 +193,7 @@ body.dark .snippet {
     color: #ccc;
 }
 
-body.dark .empty {
+body.dark .hintMsg {
     color: #999;
     text-align: center;
     margin-top: 18px;
