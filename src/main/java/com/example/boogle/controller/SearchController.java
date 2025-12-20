@@ -9,17 +9,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.boogle.model.SearchItem;
 import com.example.boogle.service.GoogleCseService;
-import com.example.boogle.service.TranslationService;//new
 
 @Controller // 給spring讀的註解，表示這邊負責處理HTTP請求
 public class SearchController {
 
     private final GoogleCseService cseService;
-    private final TranslationService translationService;// new
 
-    public SearchController(GoogleCseService cseService, TranslationService translationService) {// change
+    public SearchController(GoogleCseService cseService) {// change
         this.cseService = cseService;
-        this.translationService = translationService;// new
     }
 
     @GetMapping("/") // 給spring讀的註解，發出HTTP GET時會被觸發
